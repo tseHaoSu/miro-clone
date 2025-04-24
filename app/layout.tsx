@@ -1,12 +1,13 @@
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
 import {
   SignedIn as Authenticated,
-  SignInButton,
-  SignedOut as Unauthenticated
+  SignIn,
+  SignedOut as Unauthenticated,
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,18 +37,13 @@ export default function RootLayout({
       >
         <ConvexClientProvider>
           <main>
-            <Authenticated>{children}</Authenticated>
+            <Authenticated>
+              <Toaster />
+              {children}
+            </Authenticated>
             <Unauthenticated>
-              <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] gap-4">
-                <h2 className="text-2xl font-medium">Welcome to Miro Clone</h2>
-                <p className="text-muted-foreground mb-4">
-                  Please sign in to continue
-                </p>
-                <SignInButton mode="modal">
-                  <button className="px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">
-                    Sign In
-                  </button>
-                </SignInButton>
+              <div className="flex flex-col items-center justify-center min-h-screen">
+                <SignIn />
               </div>
             </Unauthenticated>
           </main>
