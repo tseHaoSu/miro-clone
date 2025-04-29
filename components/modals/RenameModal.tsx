@@ -1,6 +1,6 @@
 "use client";
 
-import { useRenameModal } from "@/app/store/use-rename-modal";
+import { useRenameModal } from "@/store/use-rename-modal";
 import {
   Dialog,
   DialogClose,

@@ -14,7 +14,7 @@ import { Link2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmModal from "./ConfirmModal";
 import { Button } from "./ui/button";
-import { useRenameModal } from "@/app/store/use-rename-modal";
+import { useRenameModal } from "@/store/use-rename-modal";
 
 interface ActionProps {
   children: React.ReactNode;
