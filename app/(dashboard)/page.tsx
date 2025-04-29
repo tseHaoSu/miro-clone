@@ -3,8 +3,9 @@
 import React, { use } from "react";
 
 import { useOrganization } from "@clerk/nextjs";
-import BoardList from "./_components/board-list/BoardList";
-import EmptyOrg from "./_components/board-list/EmptyOrg";
+import EmptyOrg from "./_components/EmptyOrg";
+import BoardList from "./_components/BoardList";
+
 
 interface DashboardPageProps {
   searchParams: Promise<{

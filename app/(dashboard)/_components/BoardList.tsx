@@ -2,9 +2,10 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import BoardCard from "../board-card";
+
 import EmptyBoards from "./EmptyBoards";
 import NewBoardButton from "./NewBoardButton";
+import BoardCard from "./board-card";
 
 interface BoardListProps {
   orgId: string;
@@ -15,7 +16,7 @@ interface BoardListProps {
 }
 
 const BoardList = ({ orgId, query }: BoardListProps) => {
-  const data = useQuery(api.boards.get, { orgId });
+  const data = useQuery(api.boards.get, { orgId, ...query });
 
   if (data === undefined) {
     return (
@@ -68,7 +69,7 @@ const BoardList = ({ orgId, query }: BoardListProps) => {
             authorName={board.authorName}
             createdAt={board._creationTime}
             orgId={board.orgId}
-            isFavorite={true}
+            isFavorite={board.isFavorite}
           />
         ))}
       </div>
