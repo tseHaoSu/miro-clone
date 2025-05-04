@@ -14,18 +14,12 @@ interface Props {
 }
 
 export function Room({ children, roomId, fallback }: Props) {
-  console.log("Room ID:", roomId);
   return (
-    <LiveblocksProvider
-      publicApiKey={
-        "pk_dev_1dg-DDO-q0sV4FSmzvjQnAiP8W62onIFqkrYB5mGhcIxWvbz27wmNTUrttbNpp6B"
-      }
-    >
+    <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
       <RoomProvider id={roomId} initialPresence={{}}>
-        <ClientSideSuspense fallback={fallback}>
-          {children}
-        </ClientSideSuspense>
+        <ClientSideSuspense fallback={fallback}>{children}</ClientSideSuspense>
       </RoomProvider>
     </LiveblocksProvider>
   );
 }
+

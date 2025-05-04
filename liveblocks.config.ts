@@ -1,5 +1,9 @@
 // Define Liveblocks types for your application
 // https://liveblocks.io/docs/api-reference/liveblocks-react#Typing-your-data
+
+import { auth } from "@clerk/nextjs/server";
+import { createClient } from "@liveblocks/client";
+
 declare global {
   interface Liveblocks {
     // Each user's Presence, for useMyPresence, useOthers, etc.
@@ -16,19 +20,18 @@ declare global {
 
     // Custom user info set when authenticating with a secret key
     UserMeta: {
-      id: string;
+      id?: string;
       info: {
-        // Example properties, for useSelf, useUser, useOthers, etc.
-        // name: string;
-        // avatar: string;
+        name?: string;
+        picture?: string;
       };
     };
 
     // Custom events, for useBroadcastEvent, useEventListener
     RoomEvent: {};
-      // Example has two events, using a union
-      // | { type: "PLAY" } 
-      // | { type: "REACTION"; emoji: "🔥" };
+    // Example has two events, using a union
+    // | { type: "PLAY" }
+    // | { type: "REACTION"; emoji: "🔥" };
 
     // Custom metadata set on threads, for useThreads, useCreateThread, etc.
     ThreadMetadata: {
