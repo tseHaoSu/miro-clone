@@ -49,13 +49,15 @@ const Info = ({ boardId }: InfoProps) => {
         </Button>
       </Hint>
       <TabSeparator />
-      <Button
-        variant="board"
-        className="font-normal"
-        onClick={() => onOpen(data._id, data.title)}
-      >
-        {data.title}
-      </Button>
+      <Hint label="Rename Board" sideOffset={10}>
+        <Button
+          variant="board"
+          className="font-normal"
+          onClick={() => onOpen(data._id, data.title)}
+        >
+          {data.title}
+        </Button>
+      </Hint>
     </div>
   );
 };

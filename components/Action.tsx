@@ -31,13 +31,13 @@ const Action = ({ children, side, sideOffset, id, title }: ActionProps) => {
     navigator.clipboard
       .writeText(`${window.location.origin}/board/${id}`)
       .then(() => toast.success("Link copied to clipboard"))
-      .catch((err) => toast.error("Failed to copy link"));
+      .catch(() => toast.error("Failed to copy link"));
   };
 
   const onDelete = () => {
     mutate({ id })
       .then(() => toast.success("Board deleted"))
-      .catch((err) => toast.error("Failed to delete board"));
+      .catch(() => toast.error("Failed to delete board"));
   };
 
   return (
