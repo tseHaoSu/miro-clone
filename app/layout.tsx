@@ -45,7 +45,7 @@ export default function RootLayout({
             </Authenticated>
             <Unauthenticated>
               <div className="flex flex-col items-center justify-center min-h-screen">
-                <SignIn />
+                <SignIn routing="hash" />
               </div>
             </Unauthenticated>
           </main>

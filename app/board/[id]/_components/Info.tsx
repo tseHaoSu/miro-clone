@@ -10,6 +10,9 @@ import { Poppins } from "next/font/google";
 import Image from "next/image";
 import Hint from "@/components/Hint";
 import { useRenameModal } from "@/store/use-rename-modal";
+import Action from "@/components/Action";
+import { Menu } from "lucide-react";
+
 
 interface InfoProps {
   boardId: string;
@@ -58,6 +61,16 @@ const Info = ({ boardId }: InfoProps) => {
           {data.title}
         </Button>
       </Hint>
+      <TabSeparator />
+      <Action id={data._id} title={data.title} side="bottom" sideOffset={10}>
+        <div>
+          <Hint label="Main Menu" side="bottom" sideOffset={10}>
+            <Button variant="board" size="icon">
+              <Menu/>
+            </Button>
+          </Hint>
+        </div>
+      </Action>
     </div>
   );
 };
