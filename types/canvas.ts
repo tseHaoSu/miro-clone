@@ -83,7 +83,7 @@ export enum Side {
   Top = 1,
   Bottom = 2,
   Left = 4,
-  right = 8,
+  Right = 8,
 }
 
 export type CanvasState =
@@ -99,7 +99,7 @@ export type CanvasState =
         | LayerType.Text
         | LayerType.Note;
     }
-  | { mode: CanvasMode.Resizing; initialBOunds: XYWH; corner: Side }
+  | { mode: CanvasMode.Resizing; initialBounds: XYWH; corner: Side }
   | { mode: CanvasMode.Pencil };
 
 export enum CanvasMode {
