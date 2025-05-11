@@ -31,7 +31,7 @@ const Toolbar = ({
 }: Props) => {
   return (
     <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-y-4">
-      <div className="bg-white rounded-md py-1 flex flex-col items-center shadow-md">
+      <div className="bg-white rounded-md py-1.5 flex flex-col items-center shadow-md">
         <ToolButton
           label="Select"
           icon={MousePointer2}
