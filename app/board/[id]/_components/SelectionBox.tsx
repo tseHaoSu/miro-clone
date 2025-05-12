@@ -1,5 +1,6 @@
 "use client";
 
+import { useSelectionBounds } from "@/hooks/use-selection-bounds";
 import { LayerType, Side, XYWH } from "@/types/canvas";
 import { useSelf, useStorage } from "@liveblocks/react/suspense";
 import React, { memo } from "react";
@@ -20,6 +21,8 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
     (root) =>
       soleLayerId && root.layers.get(soleLayerId)?.type !== LayerType.Path
   );
+
+  const bounds = useSelectionBounds();
   return <div></div>;
 });
 

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
-import { useApiMutation } from "@/convex/hooks/use_api_mutation";
+import { useApiMutation } from "@/convex/_generated/hooks/use_api_mutation";
 import { useOrganization } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -17,13 +17,14 @@ const EmptyBoards = () => {
     mutate({
       orgId: organization.id,
       title: "New Board",
-    }).then((id) => {
-      toast.success("Board created");
-      router.push(`/board/${id}`);
     })
-    .catch(() => {
-      toast.error("Error creating board");
-    });
+      .then((id) => {
+        toast.success("Board created");
+        router.push(`/board/${id}`);
+      })
+      .catch(() => {
+        toast.error("Error creating board");
+      });
   };
   return (
     <div className="flex flex-col items-center justify-center h-full my-4">

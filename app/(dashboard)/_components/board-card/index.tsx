@@ -3,7 +3,7 @@
 import Action from "@/components/Action";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
-import { useApiMutation } from "@/convex/hooks/use_api_mutation";
+import { useApiMutation } from "@/convex/_generated/hooks/use_api_mutation";
 import { useAuth } from "@clerk/nextjs";
 import { formatDistanceToNow } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
