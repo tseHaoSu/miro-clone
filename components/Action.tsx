@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { api } from "@/convex/_generated/api";
-import { useApiMutation } from "@/convex/_generated/hooks/use_api_mutation";
+import { useApiMutation } from "@/hooks/use_api_mutation";
 import { Link2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ConfirmModal from "./ConfirmModal";

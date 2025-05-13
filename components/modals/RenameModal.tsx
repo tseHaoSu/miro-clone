@@ -13,7 +13,7 @@ import {
 import { FormEventHandler, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useApiMutation } from "@/convex/_generated/hooks/use_api_mutation";
+import { useApiMutation } from "@/hooks/use_api_mutation";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
 
