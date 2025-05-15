@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { useApiMutation } from "@/convex/_generated/hooks/use_api_mutation";
+import { useApiMutation } from "@/hooks/use_api_mutation";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";

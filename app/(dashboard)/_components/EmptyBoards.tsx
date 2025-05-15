@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
-import { useApiMutation } from "@/convex/_generated/hooks/use_api_mutation";
+import { useApiMutation } from "@/hooks/use_api_mutation";
+
 import { useOrganization } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
