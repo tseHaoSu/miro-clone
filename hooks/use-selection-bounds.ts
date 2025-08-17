@@ -1,6 +1,12 @@
 import { Layer, XYWH } from "@/types/canvas";
 import { useSelf, useStorage } from "@liveblocks/react/suspense";
 
+
+/**
+ * The bounding box  is the layers of the bounding box. 
+ * @param layers 
+ * @returns 
+ */
 const boundingBox = (layers: Layer[]): XYWH | null => {
   const first = layers[0];
   if (!first) {

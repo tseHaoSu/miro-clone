@@ -20,7 +20,6 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
     const result =
       soleLayerId !== null &&
       root.layers.get(soleLayerId)?.type !== LayerType.Path;
-    // console.log("Should show handles:", result);
     return result;
   });
 
@@ -57,9 +56,14 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             height={HANDLE_WIDTH}
             style={{
               cursor: "nwse-resize",
+              width: `${HANDLE_WIDTH}px`,
+              height: `${HANDLE_WIDTH}px`,
+              transform: `translate(${bounds.x - HANDLE_WIDTH/2 + bounds.width}px, ${bounds.y + bounds.height/2 - HANDLE_WIDTH/2} px)`,
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              //add resize handler
+              onResizeHandlePointerDown(Side.Top | Side.Left, bounds);
             }}
           />
 
@@ -75,6 +79,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Top | Side.Right, bounds);
             }}
           />
 
@@ -90,6 +95,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Bottom | Side.Left, bounds);
             }}
           />
 
@@ -105,6 +111,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Bottom | Side.Right, bounds);
             }}
           />
 
@@ -120,6 +127,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Top, bounds);
             }}
           />
 
@@ -135,6 +143,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Right, bounds);
             }}
           />
 
@@ -150,6 +159,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Bottom, bounds);
             }}
           />
 
@@ -165,6 +175,7 @@ export const SelectionBox = memo(({ onResizeHandlePointerDown }: Props) => {
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
+              onResizeHandlePointerDown(Side.Left, bounds);
             }}
           />
         </>
