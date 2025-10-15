@@ -46,9 +46,9 @@ const Canvas = ({ boardId }: CanvasProps) => {
   });
 
   const [lastUsedColor, setLastUsedColor] = useState<Color>({
-    r: 255,
-    g: 255,
-    b: 255,
+    r: 0,
+    g: 0,
+    b: 0,
   });
 
   const history = useHistory();
@@ -122,7 +122,7 @@ const Canvas = ({ boardId }: CanvasProps) => {
 
   [canvasState]
   );
-
+  
   const onResizeHandlePointerDown = useCallback(
     (corner: Side, initialBounds: XYWH) => {
       history.pause();
@@ -148,6 +148,7 @@ const Canvas = ({ boardId }: CanvasProps) => {
       const current = pointerEventToCanvasPoint(e, camera);
 
       if (canvasState.mode === CanvasMode.Resizing) {
+        //see if resizing
         console.log("resizing");
       }
       setMyPresence({
