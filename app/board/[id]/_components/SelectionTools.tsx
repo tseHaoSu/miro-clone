@@ -8,7 +8,7 @@ import ColorPicker from "./ColorPicker";
 import { useDeleteLayers } from "@/hooks/use-delete-layers";
 import Hint from "@/components/Hint";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { BringToFront, SendToBack, Trash2 } from "lucide-react";
 
 interface SelectionToolsProps {
   camera: Camera;
@@ -31,6 +31,72 @@ const SelectionTools = memo(
       [selection, setLastUsedColor]
     );
 
+    const sendToBack = useMutation(
+      ({ storage }) => {
+        const liveLayerIds = storage.get("layerIds");
+        const indices: number[] = [];
+        const arr = liveLayerIds.toArray();
+
+        // Find indices
+        if (selection) {
+          for (const id of selection) {
+            const index = arr.indexOf(id);
+            if (index !== -1) {
+              indices.push(index);
+            }
+          }
+        }
+        // Sort indices in descending order
+        indices.sort((a, b) => b - a);
+        // Remove selected layers
+        for (const index of indices) {
+          liveLayerIds.delete(index);
+        }
+
+        // Add them to the beginning
+        if (selection) {
+          for (let i = selection.length - 1; i >= 0; i--) {
+            liveLayerIds.insert(selection[i], 0);
+          }
+        }
+      },
+      [selection]
+    );
+
+    const bringToFront = useMutation(
+      ({ storage }) => {
+        const liveLayerIds = storage.get("layerIds");
+        const indices: number[] = [];
+        const arr = liveLayerIds.toArray();
+
+        // Find indices of selected layers
+        if (selection) {
+          for (const id of selection) {
+            const index = arr.indexOf(id);
+            if (index !== -1) {
+              indices.push(index);
+            }
+          }
+        }
+
+        // Sort indices in descending order
+        indices.sort((a, b) => b - a);
+
+        // Remove selected layers from their current positions
+        for (const index of indices) {
+          liveLayerIds.delete(index);
+        }
+
+        // opposite send to back
+        if (selection) {
+          for (const id of selection) {
+            liveLayerIds.push(id); // push adds to end
+          }
+        }
+      },
+      [selection]
+    );
+
     const selectionBounds = useSelectionBounds();
 
     const deleteLayers = useDeleteLayers();
@@ -50,7 +116,19 @@ const SelectionTools = memo(
         }}
       >
         <ColorPicker onChange={setFill} />
-        <div>
+        <div className="flex flex-col gap-y-0.5">
+          <Hint label="Bring to front">
+            <Button variant="board" size="icon" onClick={bringToFront}>
+              <BringToFront />
+            </Button>
+          </Hint>
+          <Hint label="send to back">
+            <Button variant="board" size="icon" onClick={sendToBack}>
+              <SendToBack />
+            </Button>
+          </Hint>
+        </div>
+        <div className="flex items-center pl-2 ml-2 border-l border-neutral-300">
           <Hint label="Delete">
             <Button variant="board" size="icon" onClick={deleteLayers}>
               <Trash2 />

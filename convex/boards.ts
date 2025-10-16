@@ -39,7 +39,7 @@ export const get = query({
     }
 
     // Get all boards for the org, with optional search filter
-    let boards = [];
+    let boards;
     const title = args.search as string;
 
     if (title) {
