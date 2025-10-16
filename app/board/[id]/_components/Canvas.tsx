@@ -32,7 +32,7 @@ import LayerPreview from "./LayerPreview";
 import { Participants } from "./Participants";
 import { SelectionBox } from "./SelectionBox";
 import ToolBar from "./Toolbar";
-
+import SelectionTools from "./SelectionTools";
 
 const MAX_LAYERS = 100;
 
@@ -50,7 +50,7 @@ const Canvas = ({ boardId }: CanvasProps) => {
     y: 0,
   });
 
-  const [lastUsedColor] = useState<Color>({
+  const [lastUsedColor, setLastUsedColor] = useState<Color>({
     r: 0,
     g: 0,
     b: 0,
@@ -136,11 +136,8 @@ const Canvas = ({ boardId }: CanvasProps) => {
 
   //empty array no dependencies
   const unselectLayers = useMutation(({ self, setMyPresence }) => {
-    if(self.presence.selection.length > 0) {
-      setMyPresence(
-        { selection: [] },
-        { addToHistory: true }
-      );
+    if (self.presence.selection.length > 0) {
+      setMyPresence({ selection: [] }, { addToHistory: true });
     }
   }, []);
 
@@ -307,6 +304,7 @@ const Canvas = ({ boardId }: CanvasProps) => {
         redo={history.redo}
         undo={history.undo}
       />
+      <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />
       <svg
         className="h-[100vh] w-[100vw]"
         onWheel={onWheel}
