@@ -30,8 +30,8 @@ const Toolbar = ({
   canRedo,
 }: Props) => {
   return (
-    <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-y-4">
-      <div className="bg-white rounded-md py-1.5 flex flex-col items-center shadow-md">
+    <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-y-8">
+      <div className="bg-white rounded-md py-1.5 flex flex-col items-center shadow-md gap-y-1">
         <ToolButton
           label="Select"
           icon={MousePointer2}
@@ -111,7 +111,7 @@ const Toolbar = ({
           isActive={canvasState.mode === CanvasMode.Pencil}
         />
       </div>
-      <div className="bg-white rounded-md p-1.5 flex flex-col items-center shadow-md">
+      <div className="bg-white rounded-md p-1.5 flex flex-col items-center shadow-md gap-y-1">
         <ToolButton
           label="Undo"
           icon={Undo2}

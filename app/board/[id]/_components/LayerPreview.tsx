@@ -2,7 +2,7 @@ import { useStorage } from "@liveblocks/react";
 import React from "react";
 import { LayerType } from "@/types/canvas";
 import Rectangle from "./Rectangle";
-
+import Circle from "./Circle";
 //memo: prevent rerender
 
 interface Props {
@@ -18,6 +18,15 @@ const LayerPreview = ({ id, onLayerPointerDown, selectionColor }: Props) => {
     return null;
   }
   switch (layer.type) {
+    case LayerType.Ellipse:
+      return (
+        <Circle
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointerDown}
+          selectionColor={selectionColor}
+        />
+      );
     case LayerType.Rectangle:
       return (
         <Rectangle
