@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Miro Clone
+
+A collaborative whiteboard application built with Next.js and Liveblocks, inspired by Miro.
+
+## 🚀 Live Demo
+
+[**Try the live demo here**](https://miro-clone-nine-rosy.vercel.app/)
+
+## Features
+
+- 🎨 **Real-time Collaboration** - Multiple users can draw and edit simultaneously
+- 🔧 **Drawing Tools** - Create rectangles, ellipses, text, and notes
+- 🎯 **Selection Tools** - Select, move, and resize objects
+- 🎨 **Color Picker** - Customize colors for your drawings
+- 📐 **Layer Management** - Bring to front, send to back functionality
+- 🗑️ **Delete Objects** - Remove selected elements
+- 👥 **Live Cursors** - See other users' cursors in real-time
+- 🔍 **Pan and Zoom** - Navigate around the canvas with mouse wheel
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React, TypeScript
+- **Styling**: Tailwind CSS
+- **Real-time**: Liveblocks
+- **Database**: Convex
+- **Authentication**: Clerk
+- **Icons**: Lucide React
+- **UI Components**: Radix UI
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repository**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   ```bash
+   git clone https://github.com/tseHaoSu/miro-clone.git
+   cd miro-clone
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+
+   ```bash
+   NEXT_PUBLIC_CONVEX_URL=your_convex_url
+   LIVEBLOCKS_SECRET_KEY=your_liveblocks_secret_key
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+   CLERK_SECRET_KEY=your_clerk_secret_key
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Usage
+
+1. **Create an account** or sign in
+2. **Create a new board** or join an existing one
+3. **Start drawing** using the toolbar
+4. **Collaborate** with others in real-time
+5. **Save your work** automatically
+
+## Project Structure
+
+```
+├── app/                    # Next.js app directory
+│   ├── (dashboard)/       # Dashboard pages
+│   ├── board/[id]/        # Board pages and components
+│   └── api/               # API routes
+├── components/            # Reusable UI components
+├── convex/               # Convex database functions
+├── hooks/                # Custom React hooks
+├── lib/                  # Utility functions
+└── types/                # TypeScript type definitions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## License
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project is open source and available under the [MIT License](LICENSE).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Acknowledgments
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Inspired by [Miro](https://miro.com/)
+- Built with [Liveblocks](https://liveblocks.io/) for real-time collaboration
+- UI components from [Radix UI](https://www.radix-ui.com/)
