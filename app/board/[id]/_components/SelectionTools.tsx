@@ -1,3 +1,4 @@
+// SelectionTools.tsx - UPDATED
 "use client";
 
 import { useSelectionBounds } from "@/hooks/use-selection-bounds";
@@ -37,7 +38,6 @@ const SelectionTools = memo(
         const indices: number[] = [];
         const arr = liveLayerIds.toArray();
 
-        // Find indices
         if (selection) {
           for (const id of selection) {
             const index = arr.indexOf(id);
@@ -46,14 +46,13 @@ const SelectionTools = memo(
             }
           }
         }
-        // Sort indices in descending order
+
         indices.sort((a, b) => b - a);
-        // Remove selected layers
+
         for (const index of indices) {
           liveLayerIds.delete(index);
         }
 
-        // Add them to the beginning
         if (selection) {
           for (let i = selection.length - 1; i >= 0; i--) {
             liveLayerIds.insert(selection[i], 0);
@@ -69,7 +68,6 @@ const SelectionTools = memo(
         const indices: number[] = [];
         const arr = liveLayerIds.toArray();
 
-        // Find indices of selected layers
         if (selection) {
           for (const id of selection) {
             const index = arr.indexOf(id);
@@ -79,18 +77,15 @@ const SelectionTools = memo(
           }
         }
 
-        // Sort indices in descending order
         indices.sort((a, b) => b - a);
 
-        // Remove selected layers from their current positions
         for (const index of indices) {
           liveLayerIds.delete(index);
         }
 
-        // opposite send to back
         if (selection) {
           for (const id of selection) {
-            liveLayerIds.push(id); // push adds to end
+            liveLayerIds.push(id);
           }
         }
       },
@@ -98,7 +93,6 @@ const SelectionTools = memo(
     );
 
     const selectionBounds = useSelectionBounds();
-
     const deleteLayers = useDeleteLayers();
 
     if (!selectionBounds) {
@@ -116,13 +110,14 @@ const SelectionTools = memo(
         }}
       >
         <ColorPicker onChange={setFill} />
+
         <div className="flex flex-col gap-y-0.5">
           <Hint label="Bring to front">
             <Button variant="board" size="icon" onClick={bringToFront}>
               <BringToFront />
             </Button>
           </Hint>
-          <Hint label="send to back">
+          <Hint label="Send to back">
             <Button variant="board" size="icon" onClick={sendToBack}>
               <SendToBack />
             </Button>

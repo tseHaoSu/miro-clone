@@ -1,8 +1,11 @@
+"use client";
+
+import { LayerType } from "@/types/canvas";
 import { useStorage } from "@liveblocks/react";
 import React from "react";
-import { LayerType } from "@/types/canvas";
-import Rectangle from "./Rectangle";
 import Circle from "./Circle";
+import Rectangle from "./Rectangle";
+import Text from "./Text";
 //memo: prevent rerender
 
 interface Props {
@@ -30,6 +33,15 @@ const LayerPreview = ({ id, onLayerPointerDown, selectionColor }: Props) => {
     case LayerType.Rectangle:
       return (
         <Rectangle
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointerDown}
+          selectionColor={selectionColor}
+        />
+      );
+    case LayerType.Text:
+      return (
+        <Text
           id={id}
           layer={layer}
           onPointerDown={onLayerPointerDown}
