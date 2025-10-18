@@ -1,7 +1,7 @@
 "use client";
 
-import { cn, colorToCss } from "@/lib/utils";
-import { TextLayer } from "@/types/canvas";
+import { cn, colorToCss, getContrastingColor } from "@/lib/utils";
+import { NoteLayer } from "@/types/canvas";
 import { useMutation } from "@liveblocks/react";
 import { Kalam } from "next/font/google";
 import React from "react";
@@ -14,8 +14,8 @@ const font = Kalam({
 
 const calculateFont = (width: number, height: number) => {
   const maxFontSize = 96;
-  const minFontSize = 12; // Minimum readable font size
-  const scaleFactor = 0.15; // Reduced scale factor for better readability
+  const minFontSize = 12;
+  const scaleFactor = 0.15;
 
   const fontSizeBasedOnHeight = height * scaleFactor;
   const fontSizeBasedOnWidth = width * scaleFactor;
@@ -28,14 +28,14 @@ const calculateFont = (width: number, height: number) => {
   return Math.max(calculatedSize, minFontSize);
 };
 
-interface TextProps {
+interface NoteProps {
   id: string;
-  layer: TextLayer;
+  layer: NoteLayer;
   onPointerDown: (e: React.PointerEvent, id: string) => void;
   selectionColor?: string;
 }
 
-const Text = ({ layer, onPointerDown, selectionColor, id }: TextProps) => {
+const Text = ({ layer, onPointerDown, selectionColor, id }: NoteProps) => {
   const { x, y, width, height, value, fill } = layer;
 
   const updateValue = useMutation(({ storage }, newValue: string) => {
@@ -57,22 +57,22 @@ const Text = ({ layer, onPointerDown, selectionColor, id }: TextProps) => {
       onPointerDown={(e) => onPointerDown(e, id)}
       style={{
         outline: selectionColor ? `1px solid ${selectionColor}` : "none",
+        backgroundColor: fill ? colorToCss(fill) : "#000",
       }}
+      className="shadow-md drop-shadow-xl"
     >
       <ContentEditable
-        html={value || "Text"}
+        html={value || "Sticky Note"}
         onChange={handleContentChange}
         className={cn(
-          "h-full w-full flex items-center justify-center text-center drop-shadow-md outline-none",
+          "h-full w-full flex items-center justify-center text-center outline-none",
           "overflow-hidden break-words hyphens-auto",
           "min-h-0 min-w-0",
           font.className
         )}
         style={{
           fontSize: calculateFont(width, height),
-          color: fill ? colorToCss(fill) : "#000",
-          lineHeight: "1.2",
-          wordBreak: "break-word",
+          color: fill ? colorToCss(getContrastingColor(fill)) : "#000",
         }}
       />
     </foreignObject>

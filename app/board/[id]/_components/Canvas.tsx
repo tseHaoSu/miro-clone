@@ -235,6 +235,9 @@ const Canvas = ({ boardId }: CanvasProps) => {
         resizeSelectedLayers(current);
         return;
       }
+      else if (canvasState.mode === CanvasMode.Pencil) {
+        continueDrawing
+      }
       setMyPresence({
         cursor: current,
       });
@@ -255,6 +258,16 @@ const Canvas = ({ boardId }: CanvasProps) => {
     });
   }, []);
 
+  const startDrawing = useMutation(
+    ({ setMyPresence }, point: Point, pressure: number) => {
+      setMyPresence({
+        pencilDraft: [[point.x, point.y, pressure]],
+        pencilColor: lastUsedColor,
+      });
+    },
+    [lastUsedColor]
+  );
+
   //remove selection if we click on empty space
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -263,12 +276,17 @@ const Canvas = ({ boardId }: CanvasProps) => {
         return;
       }
 
+      if (canvasState.mode === CanvasMode.Pencil) {
+        startDrawing(point, e.pressure);
+        return;
+      }
+
       setCanvasState({
         origin: point,
         mode: CanvasMode.Pressing,
       });
     },
-    [camera, canvasState.mode, setCanvasState]
+    [camera, canvasState.mode, setCanvasState, startDrawing]
   );
 
   //pointer up for inserting and translating

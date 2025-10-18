@@ -92,3 +92,15 @@ export function findIntersectingLayersWithRectangle(
 
   return ids;
 }
+
+export function getContrastingColor(color: Color): Color {
+  // Calculate the relative luminance of the color
+  // Using the formula: 0.299*R + 0.587*G + 0.114*B
+  const luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / 255;
+
+  // If the color is bright (luminance > 0.5), return black
+  // If the color is dark (luminance <= 0.5), return white
+  return luminance > 0.5
+    ? { r: 0, g: 0, b: 0 } // Black for bright backgrounds
+    : { r: 255, g: 255, b: 255 }; // White for dark backgrounds
+}

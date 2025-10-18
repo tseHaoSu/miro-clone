@@ -6,6 +6,7 @@ import React from "react";
 import Circle from "./Circle";
 import Rectangle from "./Rectangle";
 import Text from "./Text";
+import Note from "./note";
 //memo: prevent rerender
 
 interface Props {
@@ -42,6 +43,15 @@ const LayerPreview = ({ id, onLayerPointerDown, selectionColor }: Props) => {
     case LayerType.Text:
       return (
         <Text
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointerDown}
+          selectionColor={selectionColor}
+        />
+      );
+    case LayerType.Note:
+      return (
+        <Note
           id={id}
           layer={layer}
           onPointerDown={onLayerPointerDown}
