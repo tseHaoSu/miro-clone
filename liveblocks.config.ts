@@ -1,14 +1,8 @@
 // Define Liveblocks types for your application
 // https://liveblocks.io/docs/api-reference/liveblocks-react#Typing-your-data
 
-import { auth } from "@clerk/nextjs/server";
-import {
-  createClient,
-  LiveList,
-  LiveMap,
-  LiveObject,
-} from "@liveblocks/client";
-import { Color, Layer } from "./types/canvas";
+import { LiveList, LiveMap, LiveObject } from "@liveblocks/client";
+import type { Color, Layer } from "./types/canvas";
 
 declare global {
   interface Liveblocks {

@@ -26,7 +26,7 @@ import {
   useStorage,
 } from "@liveblocks/react/suspense";
 import { nanoid } from "nanoid";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CursorPresence from "./CursorPresence";
 import Info from "./Info";
 import LayerPreview from "./LayerPreview";
@@ -57,9 +57,40 @@ const Canvas = ({ boardId }: CanvasProps) => {
     b: 0,
   });
 
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState<Point | null>(null);
+
   const history = useHistory();
   const canUndo = useCanUndo();
   const canRedo = useCanRedo();
+
+  // Keyboard event handlers for spacebar
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" && !e.repeat) {
+        e.preventDefault();
+        setIsSpacePressed(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        setIsSpacePressed(false);
+        setIsPanning(false);
+        setPanStart(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
 
   //empty array no dependencies
   const insertLayer = useMutation(
@@ -204,7 +235,6 @@ const Canvas = ({ boardId }: CanvasProps) => {
         layer.update(bounds);
       }
     },
-
     [canvasState]
   );
 
@@ -227,9 +257,76 @@ const Canvas = ({ boardId }: CanvasProps) => {
     }));
   }, []);
 
+  const continueDrawing = useMutation(
+    ({ self, setMyPresence }, point: Point, e: React.PointerEvent) => {
+      const { pencilDraft } = self.presence;
+
+      if (
+        canvasState.mode !== CanvasMode.Pencil ||
+        e.buttons !== 1 ||
+        pencilDraft === null
+      ) {
+        return;
+      }
+
+      setMyPresence({
+        cursor: point,
+        pencilDraft:
+          pencilDraft.length === 1 &&
+          pencilDraft[0][0] === point.x &&
+          pencilDraft[0][1] === point.y
+            ? pencilDraft
+            : [...pencilDraft, [point.x, point.y, e.pressure]],
+      });
+    },
+    [canvasState.mode]
+  );
+
+  const insertPath = useMutation(({ storage, self, setMyPresence }) => {
+    const liveLayers = storage.get("layers");
+    const { pencilDraft } = self.presence;
+
+    if (
+      pencilDraft == null ||
+      pencilDraft.length < 2 ||
+      liveLayers.size >= MAX_LAYERS
+    ) {
+      setMyPresence({
+        pencilDraft: null,
+        pencilColor: null,
+      });
+      return;
+    }
+  }, []);
+
+  const startDrawing = useMutation(
+    ({ setMyPresence }, point: Point, pressure: number) => {
+      setMyPresence({
+        pencilDraft: [[point.x, point.y, pressure]],
+        pencilColor: lastUsedColor,
+      });
+    },
+    [lastUsedColor]
+  );
+
   const onPointerMove = useMutation(
     ({ setMyPresence }, e: React.PointerEvent) => {
       e.preventDefault();
+
+      // Handle panning when spacebar is pressed and mouse is down
+      if (isPanning && panStart) {
+        const deltaX = e.clientX - panStart.x;
+        const deltaY = e.clientY - panStart.y;
+
+        setCamera({
+          x: camera.x + deltaX,
+          y: camera.y + deltaY,
+        });
+
+        setPanStart({ x: e.clientX, y: e.clientY });
+        return;
+      }
+
       const current = pointerEventToCanvasPoint(e, camera);
 
       if (canvasState.mode === CanvasMode.Pressing) {
@@ -243,7 +340,7 @@ const Canvas = ({ boardId }: CanvasProps) => {
         resizeSelectedLayers(current);
         return;
       } else if (canvasState.mode === CanvasMode.Pencil) {
-        continueDrawing;
+        continueDrawing(current, e);
       }
       setMyPresence({
         cursor: current,
@@ -256,6 +353,9 @@ const Canvas = ({ boardId }: CanvasProps) => {
       translateSelectedLayers,
       startMultiSelection,
       updateSelectionNet,
+      continueDrawing,
+      isPanning,
+      panStart,
     ]
   );
 
@@ -265,20 +365,18 @@ const Canvas = ({ boardId }: CanvasProps) => {
     });
   }, []);
 
-  const startDrawing = useMutation(
-    ({ setMyPresence }, point: Point, pressure: number) => {
-      setMyPresence({
-        pencilDraft: [[point.x, point.y, pressure]],
-        pencilColor: lastUsedColor,
-      });
-    },
-    [lastUsedColor]
-  );
-
   //remove selection if we click on empty space
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
       const point = pointerEventToCanvasPoint(e, camera);
+
+      // If spacebar is pressed, start panning
+      if (isSpacePressed) {
+        setIsPanning(true);
+        setPanStart({ x: e.clientX, y: e.clientY });
+        return;
+      }
+
       if (canvasState.mode === CanvasMode.Inserting) {
         return;
       }
@@ -293,13 +391,20 @@ const Canvas = ({ boardId }: CanvasProps) => {
         mode: CanvasMode.Pressing,
       });
     },
-    [camera, canvasState.mode, setCanvasState, startDrawing]
+    [camera, canvasState.mode, setCanvasState, startDrawing, isSpacePressed]
   );
 
   //pointer up for inserting and translating
   const onPointerUp = useMutation(
     ({}, e) => {
       const point = pointerEventToCanvasPoint(e, camera);
+
+      // Stop panning
+      if (isPanning) {
+        setIsPanning(false);
+        setPanStart(null);
+        return;
+      }
 
       if (
         canvasState.mode === CanvasMode.None ||
@@ -309,6 +414,8 @@ const Canvas = ({ boardId }: CanvasProps) => {
         setCanvasState({
           mode: CanvasMode.None,
         });
+      } else if (canvasState.mode === CanvasMode.Pencil) {
+        insertPath();
       } else if (canvasState.mode === CanvasMode.Inserting) {
         insertLayer(canvasState.layerType, point);
       } else {
@@ -318,7 +425,16 @@ const Canvas = ({ boardId }: CanvasProps) => {
       }
       history.resume();
     },
-    [camera, canvasState, history, insertLayer, unselectLayers]
+    [
+      setCanvasState,
+      camera,
+      canvasState,
+      history,
+      insertLayer,
+      unselectLayers,
+      insertPath,
+      isPanning,
+    ]
   );
 
   const selections = useOthersMapped((other) => other.presence.selection);
@@ -378,6 +494,13 @@ const Canvas = ({ boardId }: CanvasProps) => {
       <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />
       <svg
         className="h-[100vh] w-[100vw]"
+        style={{
+          cursor: isPanning
+            ? "grabbing"
+            : isSpacePressed
+            ? "grab"
+            : "default",
+        }}
         onWheel={onWheel}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}

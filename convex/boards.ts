@@ -53,6 +53,7 @@ export const get = query({
       boards = await ctx.db
         .query("boards")
         .withIndex("byOrg", (q) => q.eq("orgId", args.orgId))
+        .order("desc")
         .collect();
     }
 
@@ -69,7 +70,7 @@ export const get = query({
       userFavorites.map((fav) => fav.boardId.toString())
     );
 
-    // Mark favorite status for each board in
+    // Mark favorite status for each board
     return boards.map((board) => ({
       ...board,
       isFavorite: favoriteIds.has(board._id.toString()),

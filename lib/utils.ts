@@ -1,4 +1,4 @@
-import { Camera, Color, Layer, Point, Side, XYWH } from "@/types/canvas";
+import { Camera, Color, Layer, LayerType, PathLayer, Point, Side, XYWH } from "@/types/canvas";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -103,4 +103,37 @@ export function getContrastingColor(color: Color): Color {
   return luminance > 0.5
     ? { r: 0, g: 0, b: 0 } // Black for bright backgrounds
     : { r: 255, g: 255, b: 255 }; // White for dark backgrounds
+}
+
+export function penPointsToPathLayer(
+  points: number[][],
+  color: Color
+): PathLayer {
+  if (points.length < 2) {
+    throw new Error("At least two points are required to create a path layer.");
+  }
+
+  // Find bounding box
+  let left = Infinity;
+  let top = Infinity;
+  let right = -Infinity;
+  let bottom = -Infinity;
+
+  for (const point of points) {
+    const [x, y] = point;
+    if (left > x) left = x;
+    if (top > y) top = y;
+    if (right < x) right = x;
+    if (bottom < y) bottom = y;
+  }
+
+  return {
+    type: LayerType.Path,
+    x: left,
+    y: top,
+    width: right - left,
+    height: bottom - top,
+    fill: color,
+    points: points.map(([x, y, pressure]) => [x - left, y - top, pressure]),
+  };
 }
