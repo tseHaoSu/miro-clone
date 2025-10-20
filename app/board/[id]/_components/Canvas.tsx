@@ -80,14 +80,22 @@ const Canvas = ({ boardId }: CanvasProps) => {
       const liveLayerIds = storage.get("layerIds");
       const layerId = nanoid();
 
-      const layer = new LiveObject({
+      const baseLayer = {
         type: layerType,
         x: position.x,
         y: position.y,
         height: 100,
         width: 100,
         fill: lastUsedColor,
-      });
+      };
+
+      // Add fontSize property for text layers
+      const layerData =
+        layerType === LayerType.Text
+          ? { ...baseLayer, fontSize: 24 }
+          : baseLayer;
+
+      const layer = new LiveObject(layerData);
 
       liveLayerIds.push(layerId);
       liveLayers.set(layerId, layer);
@@ -234,9 +242,8 @@ const Canvas = ({ boardId }: CanvasProps) => {
       } else if (canvasState.mode === CanvasMode.Resizing) {
         resizeSelectedLayers(current);
         return;
-      }
-      else if (canvasState.mode === CanvasMode.Pencil) {
-        continueDrawing
+      } else if (canvasState.mode === CanvasMode.Pencil) {
+        continueDrawing;
       }
       setMyPresence({
         cursor: current,

@@ -36,7 +36,7 @@ interface TextProps {
 }
 
 const Text = ({ layer, onPointerDown, selectionColor, id }: TextProps) => {
-  const { x, y, width, height, value, fill } = layer;
+  const { x, y, width, height, value, fill, fontSize } = layer;
 
   const updateValue = useMutation(({ storage }, newValue: string) => {
     const liveLayers = storage.get("layers");
@@ -47,6 +47,9 @@ const Text = ({ layer, onPointerDown, selectionColor, id }: TextProps) => {
   const handleContentChange = (e: ContentEditableEvent) => {
     updateValue(e.target.value);
   };
+
+  // Use fontSize if set, otherwise fall back to calculated font size
+  const finalFontSize = fontSize || calculateFont(width, height);
 
   return (
     <foreignObject
@@ -69,7 +72,7 @@ const Text = ({ layer, onPointerDown, selectionColor, id }: TextProps) => {
           font.className
         )}
         style={{
-          fontSize: calculateFont(width, height),
+          fontSize: finalFontSize,
           color: fill ? colorToCss(fill) : "#000",
           lineHeight: "1.2",
           wordBreak: "break-word",
