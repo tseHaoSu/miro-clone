@@ -1,4 +1,4 @@
-import { Camera, Color, Layer, LayerType, PathLayer, Point, Side, XYWH } from "@/types/canvas";
+import { Camera, Color, Layer, LayerType, PencilLayer, Point, Side, XYWH } from "@/types/canvas";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -108,7 +108,7 @@ export function getContrastingColor(color: Color): Color {
 export function penPointsToPathLayer(
   points: number[][],
   color: Color
-): PathLayer {
+): PencilLayer {
   if (points.length < 2) {
     throw new Error("At least two points are required to create a path layer.");
   }
@@ -128,7 +128,7 @@ export function penPointsToPathLayer(
   }
 
   return {
-    type: LayerType.Path,
+    type: LayerType.Pencil,
     x: left,
     y: top,
     width: right - left,
@@ -136,4 +136,20 @@ export function penPointsToPathLayer(
     fill: color,
     points: points.map(([x, y, pressure]) => [x - left, y - top, pressure]),
   };
+}
+
+export function getSvgPathFromStroke(stroke: number[][]) {
+  if (!stroke.length) return "";
+
+  const d = stroke.reduce(
+    (acc, [x0, y0], i, arr) => {
+      const [x1, y1] = arr[(i + 1) % arr.length];
+      acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+      return acc;
+    },
+    ["M", ...stroke[0], "Q"]
+  );
+
+  d.push("Z");
+  return d.join(" ");
 }

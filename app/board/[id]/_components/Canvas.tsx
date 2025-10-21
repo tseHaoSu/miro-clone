@@ -3,6 +3,7 @@
 import {
   connectionIdColor,
   findIntersectingLayersWithRectangle,
+  penPointsToPathLayer,
   pointerEventToCanvasPoint,
   resizeBounds,
 } from "@/lib/utils";
@@ -282,22 +283,39 @@ const Canvas = ({ boardId }: CanvasProps) => {
     [canvasState.mode]
   );
 
-  const insertPath = useMutation(({ storage, self, setMyPresence }) => {
-    const liveLayers = storage.get("layers");
-    const { pencilDraft } = self.presence;
+  const insertPath = useMutation(
+    ({ storage, self, setMyPresence }) => {
+      const liveLayers = storage.get("layers");
+      const { pencilDraft } = self.presence;
 
-    if (
-      pencilDraft == null ||
-      pencilDraft.length < 2 ||
-      liveLayers.size >= MAX_LAYERS
-    ) {
-      setMyPresence({
-        pencilDraft: null,
-        pencilColor: null,
+      if (
+        pencilDraft == null ||
+        pencilDraft.length < 2 ||
+        liveLayers.size >= MAX_LAYERS
+      ) {
+        setMyPresence({
+          pencilDraft: null,
+          pencilColor: null,
+        });
+        return;
+      }
+
+      const id = nanoid();
+      liveLayers.set(
+        id,
+        new LiveObject(penPointsToPathLayer(pencilDraft, lastUsedColor))
+      );
+
+      const liveLayersIds = storage.get("layerIds");
+      liveLayersIds.push(id);
+
+      setMyPresence({ pencilDraft: null });
+      setCanvasState({
+        mode: CanvasMode.Pencil,
       });
-      return;
-    }
-  }, []);
+    },
+    [lastUsedColor]
+  );
 
   const startDrawing = useMutation(
     ({ setMyPresence }, point: Point, pressure: number) => {
@@ -495,11 +513,7 @@ const Canvas = ({ boardId }: CanvasProps) => {
       <svg
         className="h-[100vh] w-[100vw]"
         style={{
-          cursor: isPanning
-            ? "grabbing"
-            : isSpacePressed
-            ? "grab"
-            : "default",
+          cursor: isPanning ? "grabbing" : isSpacePressed ? "grab" : "default",
         }}
         onWheel={onWheel}
         onPointerMove={onPointerMove}
